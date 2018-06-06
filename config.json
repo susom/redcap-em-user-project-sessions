@@ -1,0 +1,47 @@
+{
+  "name": "Calculate Man Hours",
+
+  "namespace": "Stanford\\CalculateManHours",
+
+  "description": "Module calculates man hours of time spent at the ",
+
+  "authors": [
+    {
+      "name": "Jae Lee",
+      "email": "jael@stanford.edu",
+      "institution": "Stanford University"
+    }
+  ],
+  "permissions": [
+    ""
+  ],
+  "links": {
+    "control-center": [
+      {
+        "name": "Test Manhours YEAR",
+        "icon": "report",
+        "url": "ManHoursRunYear.php"
+      }
+    ],
+    "project": [
+      {
+        "name": "Manhours Cron",
+        "icon": "report",
+        "url": "ManHoursCron.php"
+      }
+    ]
+  },
+  "crons": [
+    {
+      "cron_name": "cron-calc-manhours",
+      "cron_description": "Cron that run monthly to calculate man hours",
+      "method": "startCron",
+      "cron_frequency": "86400",
+      "cron_max_run_time": "60"
+    }
+  ],
+  "system-settings": [
+  ],
+  "project-settings": [
+  ]
+}
