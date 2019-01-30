@@ -270,18 +270,20 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
 
         $api_url = APP_PATH_WEBROOT_FULL . "api/";
 
-        $sql = sprintf("select * from redcap_log_view where CAST(ts AS DATE) = '%s'" .
+        $sql = sprintf("select * from redcap_log_view where " .
+            " ts BETWEEN '%s 00:00:00' AND '%s 23:59:59'" .
             " and full_url != '%s'" .
             " and user is not null" .
             " and project_id is not null" .
             // " and user != '[survey respondent]'" .
             " ORDER BY user, project_id, ts ASC;",
             prep($date_ymd),
+            prep($date_ymd),
             prep($api_url)
         );
 
         $q = db_query($sql);
-        $this->emDebug("Found " . db_num_rows($q) . " rows for from " . $date_ymd); // $sql);
+        $this->emDebug("Found " . db_num_rows($q) . " rows for from " . $date_ymd . " with " . $sql);
 
         while ($row = db_fetch_assoc($q)) {
             $user = $row['user'];
