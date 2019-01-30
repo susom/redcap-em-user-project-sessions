@@ -32,20 +32,23 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
 
     use emLoggerTrait;
 
-    // Each row is a user (on one project)...
-    const SQL_CREATE_USER_TABLE = "CREATE TABLE `stanford_session_user_summary` (
-  `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `ip` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `session_count` int(11) DEFAULT NULL COMMENT 'Number of log rows summarized',
-  `session_start` datetime DEFAULT NULL,
-  `session_end` datetime DEFAULT NULL,
-  `duration` int(11) DEFAULT NULL COMMENT 'Seconds',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `stanford_session_user_summary_username_session_start_pk` (`username`,`session_start`),
-  KEY `stanford_session_user_summary_username_idx` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
+    // const USER_SESSION_TABLE        = "stanford_session_user_summary";
+//     // Each row is a user (on one project)...
+//     const SQL_CREATE_USER_TABLE = "CREATE TABLE `stanford_session_user_summary` (
+//   `id` bigint(20) NOT NULL AUTO_INCREMENT,
+//   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+//   `ip` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+//   `session_count` int(11) DEFAULT NULL COMMENT 'Number of log rows summarized',
+//   `session_start` datetime DEFAULT NULL,
+//   `session_end` datetime DEFAULT NULL,
+//   `duration` int(11) DEFAULT NULL COMMENT 'Seconds',
+//   PRIMARY KEY (`id`),
+//   UNIQUE KEY `stanford_session_user_summary_username_session_start_pk` (`username`,`session_start`),
+//   KEY `stanford_session_user_summary_username_idx` (`username`)
+// ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
+
+    const PROJECT_SESSION_TABLE    = "stanford_session_project_summary";
     const SQL_CREATE_PROJECT_TABLE = "CREATE TABLE `stanford_session_project_summary` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -56,13 +59,11 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
   `session_end` datetime DEFAULT NULL,
   `duration` int(11) DEFAULT NULL COMMENT 'Seconds',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `stanford_session_project_summary_username_session_start_pk` (`username`,`session_start`),
+  UNIQUE KEY `stanford_session_project_summary_username_project_id_session_start_pk` (`username`,`project_id`,`session_start`),
   KEY `stanford_session_project_summary_username_idx` (`username`),
   KEY `stanford_session_project_summary_project_idx` (`project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
-    const USER_SESSION_TABLE        = "stanford_session_user_summary";
-    const PROJECT_SESSION_TABLE     = "stanford_session_project_summary";
 
     public  $scan_range_start_date;
     public  $activity_interval;
@@ -91,8 +92,8 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
         $this->emDebug("Running redcap_module_system_enable");
 
         // See if tables exist
-        $result = $this->checkTableAndCreate("stanford_session_user_summary", self::SQL_CREATE_USER_TABLE);
-        if (! $result) $this->emError("Error creating stanford_session_user_summary");
+        // $result = $this->checkTableAndCreate("stanford_session_user_summary", self::SQL_CREATE_USER_TABLE);
+        // if (! $result) $this->emError("Error creating stanford_session_user_summary");
 
         $result = $this->checkTableAndCreate("stanford_session_project_summary", self::SQL_CREATE_PROJECT_TABLE);
         if (! $result) $this->emError("Error creating stanford_session_user_summary");
@@ -187,11 +188,6 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
         // Determine the next date
         $this->next_date_dt = new DateTime($this->last_date_completed);
         $this->next_date_dt->add(new DateInterval('P1D'));
-
-
-        // $this->emDebug($this->yesterday, strtotime($this->yesterday));
-        // $this->emDebug($this->last_date_completed);
-        // return false;
 
         // See if yesterday has already been done
         if ( strtotime($this->last_date_completed) >= strtotime($this->yesterday) ) {
