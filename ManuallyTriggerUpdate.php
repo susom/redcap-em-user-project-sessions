@@ -1,10 +1,18 @@
 <?php
 /** @var \Stanford\CalculateManHours\CalculateManHours $module */
 
-// REFRESH ALL
-while( $this->checkStatus() ) {
-    $this->emDebug("Updating " . $this->next_date_dt->format('Y-m-d'));
-}
+
+
+
+// // REFRESH ALL
+// while( $module->checkStatus() ) {
+//     $module->emDebug("Updating " . $module->next_date_dt->format('Y-m-d'));
+// }
+
+
+// REFRESH ONE
+$module->checkStatus();
+$module->emDebug("Updating " . $module->next_date_dt->format('Y-m-d'));
 
 exit();
 
