@@ -15,16 +15,16 @@
   "links": {
     "control-center": [
       {
-        "name": "Test Manhours YEAR",
+        "name": "Update ManHours Manually",
         "icon": "report",
-        "url": "ManHoursRunYear.php"
+        "url": "ManuallyTriggerUpdate.php"
       }
     ],
     "project": [
       {
-        "name": "Manhours Cron",
+        "name": "Project Usage Report",
         "icon": "report",
-        "url": "ManHoursCron.php"
+        "url": "ProjectUsageReport.php"
       }
     ]
   },

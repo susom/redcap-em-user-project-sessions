@@ -1,20 +1,14 @@
 <?php
 /** @var \Stanford\CalculateManHours\CalculateManHours $module */
 
-
-// $module->emDebug('------- Starting Manhours Run Time Period -------');
-
-// while( $module->checkStatus() ) {
-// }
-
-$module->checkStatus();
-
-
-$module->emDebug('done');
+// REFRESH ALL
+while( $this->checkStatus() ) {
+    $this->emDebug("Updating " . $this->next_date_dt->format('Y-m-d'));
+}
 
 exit();
 
-
+// TODO: Make refresh for a given project
 
 
 

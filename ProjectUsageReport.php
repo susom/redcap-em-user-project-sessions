@@ -1,5 +1,10 @@
 <?php
 
+echo "Not Done Yet";
+
+exit();
+
+
 $module->emDebug('------- Starting Manhours Cron -------', "INFO");
 $module->emDebug($project_id, 'PID');
 
