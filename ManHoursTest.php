@@ -1,7 +1,7 @@
 <?php
 
-Plugin::log('------- Starting Manhours Cron -------', "INFO");
-Plugin::log($project_id, 'PID');
+$module->emDebug('------- Starting Manhours Cron -------', "INFO");
+$module->emDebug($project_id, 'PID');
 
 //pick up the configs
 
@@ -25,10 +25,10 @@ $last_midnight->setTime(0,0,0);
 $this_midnight->setTime(0,0,0);
 $start_date = $last_midnight->format('Y-m-d H:i:s');
 $end_date = $this_midnight->format('Y-m-d H:i:s');
-Plugin::log($last_midnight, "DEBUG", "LAST MIDNIGHT");
-Plugin::log($this_midnight, "DEBUG", "THIS MIDNIGHT");
-Plugin::log($start_date, "DEBUG", "LAST MIDNIGHT");
-Plugin::log($end_date, "DEBUG", "THIS MIDNIGHT");
+$module->emDebug($last_midnight, "DEBUG", "LAST MIDNIGHT");
+$module->emDebug($this_midnight, "DEBUG", "THIS MIDNIGHT");
+$module->emDebug($start_date, "DEBUG", "LAST MIDNIGHT");
+$module->emDebug($end_date, "DEBUG", "THIS MIDNIGHT");
 
 echo "<br> examining: START: ".$start_date;
 echo "<br> examining: END: ".$end_date;

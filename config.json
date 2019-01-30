@@ -1,10 +1,7 @@
 {
   "name": "Calculate Man Hours",
-
   "namespace": "Stanford\\CalculateManHours",
-
   "description": "Module calculates man hours of time spent at the ",
-
   "authors": [
     {
       "name": "Jae Lee",
@@ -13,7 +10,7 @@
     }
   ],
   "permissions": [
-    ""
+    "redcap_module_system_enable"
   ],
   "links": {
     "control-center": [
@@ -33,14 +30,39 @@
   },
   "crons": [
     {
-      "cron_name": "cron-calc-manhours",
-      "cron_description": "Cron that run monthly to calculate man hours",
-      "method": "startCron",
-      "cron_frequency": "86400",
-      "cron_max_run_time": "60"
+     "cron_name": "daily_check",
+     "cron_description": "Daily cron to update summary statistics",
+     "method": "daily_cron",
+     "cron_frequency": "86400",
+     "cron_max_run_time": "3600"
     }
   ],
   "system-settings": [
+    {
+      "key": "enable-system-debug-logging",
+      "name": "<b>Enable Debug Logging (system-wide)</b>",
+      "required": false,
+      "type": "checkbox"
+    },
+    {
+      "key": "scan_range_start_date",
+      "name": "<b>Start Date in YYYY-MM-DD format</b><br>This is the first date where summaries will begin.<br>Typically, this might be the first of the year starting 1 year ago.<br>Once this is set, you probably aren't going to change it again.",
+      "required": true,
+      "type": "text"
+    },
+    {
+      "key": "activity_interval",
+      "name": "<b>Activity Interval (in seconds)</b><br>This is the number of seconds between two view events<br>that should be considered a 'single session'.  If an event happens<br>more than <code>activity_interval</code> from the previous event,<br>it will be considered a new session.  We recommend 600 (5 minutes) to start.<br>If you do change the interval, you may want to refresh your data.",
+      "required": true,
+      "default": "600",
+      "type": "text"
+    },
+    {
+      "key": "last_date_completed",
+      "name": "<b>Last Date Summarized in YYYY-MM-DD format</b><br>This is the 'index' where the last date summarized is stored<br>  Typically this should be the date of yesterday.  When starting new, you should leave <br>it blank and it will default from the 'start date'.  If for some reason you wanted <br>to re-run from an earlier date, you could move this back in time and<br> it will increment one day at a time until it is caught up.",
+      "required": false,
+      "type": "text"
+    }
   ],
   "project-settings": [
   ]

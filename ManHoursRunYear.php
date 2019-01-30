@@ -1,10 +1,29 @@
 <?php
+/** @var \Stanford\CalculateManHours\CalculateManHours $module */
 
-Plugin::log('------- Starting Manhours Run Time Period -------', "INFO");
 
-$begin = new DateTime('2014-10-01');
-$end = new DateTime('2014-10-31');
+// $module->emDebug('------- Starting Manhours Run Time Period -------');
+
+// while( $module->checkStatus() ) {
+// }
+
+$module->checkStatus();
+
+
+$module->emDebug('done');
+
+exit();
+
+
+
+
+
+$begin = new DateTime('2018-09-01');
+$end = new DateTime('2018-09-31');
 $time_gap = 600; //number of seconds at which the session resets to start
+
+
+
 
 //check the session table to see the last time recorded?
 $max = $module->getLastEnteredTime();
@@ -27,7 +46,7 @@ if (!empty($_POST['action'])) {
             exit();
             break;
         default:
-            Plugin::log($_POST, "Unknown Action in Save");
+            $module->emDebug($_POST, "Unknown Action in Save");
             print "Unknown action";
     }
 }
@@ -36,18 +55,19 @@ function startSession($begin, $end, $time_gap) {
     global $module;
 
     $interval = DateInterval::createFromDateString('1 day');
+
+    // Go day by day from begin date to end date
     $period = new DatePeriod($begin, $interval, $end);
-
     foreach ($period as $dt) {
+        // Convert interval into string
+        $start_date = $dt->format("Y-m-d H:i:s");
+        $end_date   = $dt->add($interval)->format("Y-m-d H:i:s");
+        $module->emDebug("PreprocessByProject: Running one day period from: " . $start_date . " to : " . $end_date);
 
-
-        $end_date = $dt->format("Y-m-d H:i:s");
-        $start_date = date('Y-m-d H:i:s', strtotime('+1 day', strtotime($end_date)));
-
-        Plugin::log("PreprocessByProject: Running one day period from: " . $start_date . " to : " . $end_date);
+        // $end_date = date('Y-m-d H:i:s', strtotime('+1 day', strtotime($start_date)));
 
         //$keep = $module->preprocessInterval($end_date, $start_date, $time_gap);
-        $keep = $module->preprocessIntervalByProject($end_date, $start_date, $time_gap);
+        $keep = $module->preprocessIntervalByProject($start_date, $end_date, $time_gap);
 
     }
 }
@@ -71,9 +91,9 @@ if ($context == "project") {
 
 ?>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.1/moment.js"></script>-->
+<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/js/bootstrap-datetimepicker.min.js"></script>-->
+<!--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.7.14/css/bootstrap-datetimepicker.min.css">-->
 
 
 <!--
@@ -84,8 +104,7 @@ if ($context == "project") {
 <div class="panel panel-primary">
     <div class="panel-heading"><strong><?php echo $panel_title ?></strong></div>
     <div class="panel-body">
-        <span id="foo"> pop</span><br>
-
+        <span id="foo"></span><br>
 
 
         <br>Allowed interval time between entries is <?php echo $time_gap; ?> seconds.
@@ -96,8 +115,8 @@ if ($context == "project") {
             <div class='col-md-5'>
                 <div class="form-group">
                     <label>START</label>
-                    <div class='input-group date' id='datetimepicker6'>
-                        <input type='text' class="form-control" />
+                    <div class='input-group date'>
+                        <input name='date-start' type='text' class="form-control" placeholder="YYYY-MM-DD" value="2018-09-01" />
                         <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -107,8 +126,8 @@ if ($context == "project") {
             <div class='col-md-5'>
                 <div class="form-group">
                     <label>END</label>
-                    <div class='input-group date' id='datetimepicker7'>
-                        <input type='text' class="form-control" />
+                    <div class='input-group date'>
+                        <input name='date-end' type='text' class="form-control" placeholder="YYYY-MM-DD" value="2018-09-31"/>
                         <span class="input-group-addon">
                     <span class="glyphicon glyphicon-calendar"></span>
                 </span>
@@ -139,21 +158,10 @@ if ($context == "project") {
 
     $(document).ready(function(){
 
-        $('#datetimepicker6').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss'
-
-        });
-        $('#datetimepicker7').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss'
-        });
 
         var max = "<?php echo $max ?>";
-
-
         console.log("max is ".max);
         $('#foo').text("Last entry was on '<?php echo $max ?>'");
-
-
     });
 
 
@@ -162,18 +170,16 @@ if ($context == "project") {
     function submit () {
         var saveBtn = $('button[name="save"]');
         var saveBtnHtml = saveBtn.html();
-        var dateStart = $('#datetimepicker6').data("DateTimePicker").date();
-            //.datetimepicker('getDate');
-        var dateEnd = $('#datetimepicker7').data("DateTimePicker").date();
-            //.datetimepicker('getDate');
+        var dateStart = $('input[name="date-start"]').val();
+        var dateEnd = $('input[name="date-end"]').val();
 
         console.log("start: "+dateStart);
         console.log("end: "+dateEnd);
 
             var data = {
                 "action": "save",
-                "date_start" : dateStart.format('YYYY-MM-DD HH:mm:ss'),
-                "date_end" : dateEnd.format('YYYY-MM-DD HH:mm:ss')
+                "date_start" : dateStart,
+                "date_end" : dateEnd
             };
             saveBtn.html('<img src="'+app_path_images+'progress_circle.gif"> Running...');
             $.ajax({

@@ -1,6 +1,6 @@
 <?php
 
-Plugin::log('------- Starting Manhours Cron -------', "INFO");
+$module->emDebug('------- Starting Manhours Cron -------', "INFO");
 
 /**
  * For the nightly cron, the start and end time should be the previous day.
@@ -16,7 +16,7 @@ $this_midnight->setTimestamp(strtotime('midnight'));
 //set the interval to midnight for consistency
 $start_date = $last_midnight->format('Y-m-d H:i:s');
 $end_date = $this_midnight->format('Y-m-d H:i:s');
-Plugin::log("Running one day period from: " . $start_date . " to : " . $end_date);
+$module->emDebug("Running one day period from: " . $start_date . " to : " . $end_date);
 echo "Running one day period from: " . $start_date . " to : " . $end_date;
 
 $keep = $module->preprocessInterval($start_date, $end_date, $time_gap);
