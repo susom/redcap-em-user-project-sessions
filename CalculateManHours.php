@@ -4,29 +4,9 @@ namespace Stanford\CalculateManHours;
 
 include_once "emLoggerTrait.php";
 
-use \Plugin;
 use \ExternalModules\ExternalModules;
-
-
 use DateTime;
 use DateInterval;
-
-
-/*
- *
-
-This runs one day at a time, parsing all projects and users for that day
-
-
-
-
-
-
-
-
-
- *
- */
 
 class CalculateManHours extends \ExternalModules\AbstractExternalModule {
 
@@ -240,13 +220,17 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
      */
     public function deleteProjectSummaryData($date_ymd) {
         // DELETE EXISTING DATA FOR THAT DATE
-        $ending = "FROM " . self::PROJECT_SESSION_TABLE . " WHERE CAST(session_start AS DATE) = '" . $date_ymd . "';";
+        $ending = sprintf("FROM " . self::PROJECT_SESSION_TABLE .
+            " WHERE session_start BETWEEN '%s 00:00:00' AND '%s 23:59:59';",
+            prep($date_ymd),
+            prep($date_ymd)
+        );
 
         $sql = "SELECT count(*) $ending";
         $q = db_query($sql);
         $count = db_result($q,0);
 
-        $this->emDebug("Delete summary found $count");
+        // $this->emDebug("Delete summary found $count");
 
         if ($count > 0) {
             $q = db_query("DELETE " . $ending);
@@ -383,10 +367,10 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
      * @throws \Exception
      */
     public function daily_cron($cron_name) {
-
-        // $this->emDebug("Daily Cron", $cron_name);
+        // $this->emDebug("---- Running Cron Update -----");
         while( $this->checkStatus() ) {
-            $this->emDebug("Updating " . $this->next_date_dt->format('Y-m-d'));
+            // Processing a date...
+            $this->emDebug("Cron Update of " . $this->next_date_dt->format('Y-m-d'));
         }
     }
 
