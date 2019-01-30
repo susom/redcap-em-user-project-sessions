@@ -48,8 +48,8 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
 // ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 
-    const PROJECT_SESSION_TABLE    = "stanford_session_project_summary";
-    const SQL_CREATE_PROJECT_TABLE = "CREATE TABLE `stanford_session_project_summary` (
+    const PROJECT_SESSION_TABLE    = "em_user_project_sessions";
+    const SQL_CREATE_PROJECT_TABLE = "CREATE TABLE `em_user_project_sessions` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `username` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `project_id` int(10) DEFAULT NULL,
@@ -59,9 +59,9 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
   `session_end` datetime DEFAULT NULL,
   `duration` int(11) DEFAULT NULL COMMENT 'Seconds',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `stanford_session_project_summary_username_project_id_session_start_pk` (`username`,`project_id`,`session_start`),
-  KEY `stanford_session_project_summary_username_idx` (`username`),
-  KEY `stanford_session_project_summary_project_idx` (`project_id`)
+  UNIQUE KEY `em_user_project_sessions_unique_idx` (`username`,`project_id`,`session_start`),
+  KEY `em_user_project_sessions_username_idx` (`username`),
+  KEY `em_user_project_sessions_project_idx` (`project_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci";
 
 
@@ -95,7 +95,7 @@ class CalculateManHours extends \ExternalModules\AbstractExternalModule {
         // $result = $this->checkTableAndCreate("stanford_session_user_summary", self::SQL_CREATE_USER_TABLE);
         // if (! $result) $this->emError("Error creating stanford_session_user_summary");
 
-        $result = $this->checkTableAndCreate("stanford_session_project_summary", self::SQL_CREATE_PROJECT_TABLE);
+        $result = $this->checkTableAndCreate(self::PROJECT_SESSION_TABLE, self::SQL_CREATE_PROJECT_TABLE);
         if (! $result) $this->emError("Error creating stanford_session_user_summary");
 
         if ($result) $this->emDebug("All tables exist");
