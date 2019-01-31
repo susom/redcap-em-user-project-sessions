@@ -1,6 +1,6 @@
 <?php
 
-namespace Stanford\CalculateManHours;
+namespace Stanford\UserProjectSessions;
 
 include_once "emLoggerTrait.php";
 
@@ -8,7 +8,7 @@ use \ExternalModules\ExternalModules;
 use DateTime;
 use DateInterval;
 
-class CalculateManHours extends \ExternalModules\AbstractExternalModule {
+class UserProjectSessions extends \ExternalModules\AbstractExternalModule {
 
     use emLoggerTrait;
 

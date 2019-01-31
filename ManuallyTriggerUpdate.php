@@ -1,5 +1,5 @@
 <?php
-/** @var \Stanford\CalculateManHours\CalculateManHours $module */
+/** @var \Stanford\UserProjectSessions\UserProjectSessions $module */
 
 
 require APP_PATH_DOCROOT . "ControlCenter/header.php";

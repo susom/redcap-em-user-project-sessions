@@ -1,11 +1,16 @@
 {
-  "name": "Calculate Man Hours",
-  "namespace": "Stanford\\CalculateManHours",
-  "description": "Module calculates man hours of time spent at the ",
+  "name": "User Project Sessions",
+  "namespace": "Stanford\\UserProjectSessions",
+  "description": "Module calculates the number and duration of user sessions in each project",
   "authors": [
     {
       "name": "Jae Lee",
       "email": "jael@stanford.edu",
+      "institution": "Stanford University"
+    },
+    {
+      "name": "Andrew Martin",
+      "email": "andy123@stanford.edu",
       "institution": "Stanford University"
     }
   ],
@@ -15,9 +20,14 @@
   "links": {
     "control-center": [
       {
-        "name": "Update ManHours Manually",
-        "icon": "report",
+        "name": "Update User Project Sessions",
+        "icon": "gear",
         "url": "ManuallyTriggerUpdate.php"
+      },
+      {
+        "name": "View User Project Sessions",
+        "icon": "report",
+        "url": "GlobalUsageReport.php"
       }
     ],
     "project": [

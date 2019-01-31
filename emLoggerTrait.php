@@ -1,5 +1,5 @@
 <?php
-namespace Stanford\CalculateManHours;
+namespace Stanford\UserProjectSessions;
 
 /**
  * This trait can be use with External Modules to enable the Stanford emLogger module
