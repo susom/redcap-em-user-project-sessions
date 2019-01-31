@@ -2,7 +2,7 @@
 
 ## About ##
 
-
+This module builds a table in your database for tracking user-project sessions.
 
 
 Some sql for views:
