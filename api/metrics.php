@@ -6,7 +6,7 @@ namespace Stanford\UserProjectSessions;
 /**
  * This is called as an ajax services from the google data studio to report metrics on REDCap
  */
-
+use \System;
 
 $shared_secret_token = $module->getSystemSetting('shared_secret_token');
 $token = @$_GET['token'];
@@ -30,8 +30,9 @@ $report = @$_GET['report'];
 
 switch($report) {
     case "userProjectSessions":
-
-        $sql = "select * from em_user_project_sessions";
+        $year = isset($_GET['year']) ? intval($_GET['year']) : date('Y');
+        System::increaseMemory(4096);
+        $sql = "select * from em_user_project_sessions where year(session_start) = $year";
         $q = db_query($sql);
         $data = [];
         while ($row = db_fetch_assoc($q)) {
