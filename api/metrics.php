@@ -9,19 +9,19 @@ namespace Stanford\UserProjectSessions;
 use \System;
 
 $shared_secret_token = $module->getSystemSetting('shared_secret_token');
-$token = @$_GET['token'];
+$passkey             = @$_GET['passkey'];
 
 if (empty($shared_secret_token)) {
     exit("Security token not configured");
 }
 
-if (empty($token)) {
-    $module->emDebug("Missing token");
+if (empty($passkey)) {
+    $module->emDebug("Missing passkey");
     exit("Improper API request");
 }
 
-if ($token != $shared_secret_token) {
-    $module->emDebug("Invalid token: $token");
+if ($passkey != $shared_secret_token) {
+    $module->emDebug("Invalid passkey: $passkey");
     exit("Improper authentication - this has been logged.");
 }
 
